@@ -22,16 +22,13 @@ export class AuthService {
 
     const isPasswordValid = await bcrypt.compare(
       user.password,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       foundUser.password,
     );
 
     if (isPasswordValid) {
       return this.jwtService.sign({
         id: foundUser.id,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         email: foundUser.email,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         role: foundUser.role,
       });
     } else {
