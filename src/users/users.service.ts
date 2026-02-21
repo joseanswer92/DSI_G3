@@ -10,10 +10,10 @@ export class UsersService {
   create(dto: CreateUserDto) {
     return this.prisma.user.create({
       data: {
-        tenantId: dto.tenantId,
-        // Si querés crear profile automáticamente:
-        // profile: { create: {} },
-      },
+          email: "test@test.com",
+          password: "123456",
+          tenantId: 1
+},
     });
   }
 

@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  //output   = "../generated/prisma"
 }
 
 datasource db {
@@ -9,36 +8,58 @@ datasource db {
 
 model Tenant {
   id    Int    @id @default(autoincrement())
+  name  String
   users User[]
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  tenantId Int
-  tenant   Tenant  @relation(fields: [tenantId], references: [id])
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  password  String
+  role      String  @default("USER")
 
-  profile  Profile?
+  tenantId  Int
+  tenant    Tenant  @relation(fields: [tenantId], references: [id])
+
+  profile   Profile?
+  posts     Post[]   // 👈 ESTO FALTABA
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Profile {
-  id     Int  @id @default(autoincrement())
-  userId Int  @unique
-  user   User @relation(fields: [userId], references: [id])
+  id       Int   @id @default(autoincrement())
+  userId   Int   @unique
+  bio      String?
+  avatar   String?
+
+  user     User  @relation(fields: [userId], references: [id])
 }
 
 model Post {
   id         Int            @id @default(autoincrement())
+  title      String
+  content    String?
+
+  authorId   Int
+  author     User           @relation(fields: [authorId], references: [id])
+
   categories PostCategory[]
+
+  createdAt  DateTime @default(now())
 }
 
 model Category {
   id    Int            @id @default(autoincrement())
+  name  String         @unique
   posts PostCategory[]
 }
 
 model PostCategory {
   postId     Int
   categoryId Int
+
   post       Post     @relation(fields: [postId], references: [id])
   category   Category @relation(fields: [categoryId], references: [id])
 
